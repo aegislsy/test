@@ -14,25 +14,44 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type ="text/babel">
       function App() { 
-        const [minutes, setMinutes] = React.useState();
-        const onChange = () => {
-          setMinutes(event.target.value);
+        const [amount, setAmount] = React.useState(0);
+        const [inverted, setinverted] = React.useState(false);
+        const onChange = (event) => {
+          setAmount(event.target.value);
         };
+        const reset = () => setAmount(0);
+        const onFlip = () => {
+        reset();
+        setinverted((current) => !current);
+      };
         return (
-        <div> 
+      <div> 
         <h1 className="hi">Super Converter</h1>
+        <div>
         <label for ="minutes">Minutes</label>
         <input 
-        value = {minutes} 
+        value = {inverted ? amount * 60 : amount} 
         id="minutes" 
         placeholder = "Minutes" 
         type = "number"
         onChange = {onChange}
+        disabled={inverted}
         />
-        <h4>You want to convert {minutes}</h4>
-        <label for ="hours">Hours</label>
-        <input id="hours" placeholder = "Hours" type = "number"/>
         </div>
+        <div>
+        <label for ="hours">Hours</label>
+        <input 
+        value = {inverted ? amount : Math.round(amount / 60)} 
+        id="hours" 
+        placeholder = "Hours" 
+        type = "number"
+        disabled={!inverted}
+        onChange = {onChange}
+        />
+        </div>
+        <button onClick = {reset}>Reset</button>
+        <button onClick = {onFlip}>{inverted ? "Turn back" : "Invert"}</button>
+      </div>
       );
     }
     const root = document.getElementById("root");
